@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
@@ -24,10 +25,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Post(processor: UserPasswordHasherProcessor::class),
-        new Get(),
-        new Put(processor: UserPasswordHasherProcessor::class),
-        new Patch(processor: UserPasswordHasherProcessor::class)
+        new Post(
+            processor: UserPasswordHasherProcessor::class
+        ),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user",),
+        new Put(
+            security: "is_granted('ROLE_ADMIN') or object == user",
+            processor: UserPasswordHasherProcessor::class,
+        ),
+        new Patch(
+            security: "is_granted('ROLE_ADMIN') or object == user",
+            processor: UserPasswordHasherProcessor::class
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN') or object == user",
+        )
     ],
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
