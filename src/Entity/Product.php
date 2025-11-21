@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -31,6 +34,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     forceEager: false
 )]
 #[UniqueEntity('titlz')]
+#[ApiFilter(SearchFilter::class, properties: [
+    'id' => 'exact',
+    'titlz' => 'exact',
+    'content' => 'partial'
+])]
+#[ApiFilter(
+    DateFilter::class,
+    properties: ['createdAt']
+)]
 class Product
 {
     #[ORM\Id]
